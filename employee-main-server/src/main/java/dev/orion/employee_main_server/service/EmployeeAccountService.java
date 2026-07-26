@@ -19,8 +19,7 @@ public class EmployeeAccountService {
 
     // check username is unique or not
     public boolean checkAccountExisted(String username) {
-        var employee = accountRepo.findOne(findByUserName(username)).orElse(null);
-        return employee != null;
+        return accountRepo.findOne(findByUserName(username)).isPresent();
     }
 
     public EmployeeAccount findByUsername(String username){

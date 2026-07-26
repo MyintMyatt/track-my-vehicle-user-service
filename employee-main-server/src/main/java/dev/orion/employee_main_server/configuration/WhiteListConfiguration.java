@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-@ConfigurationProperties(prefix = "app.security")
 @Data
 public class WhiteListConfiguration {
 

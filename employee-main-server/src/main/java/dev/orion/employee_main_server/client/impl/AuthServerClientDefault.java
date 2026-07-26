@@ -6,9 +6,11 @@ import dev.orion.grpc.employee.RegisterRequest;
 import dev.orion.grpc.employee.RegisterResponse;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AuthServerClientDefault implements AuthServerClient {
 
@@ -16,6 +18,7 @@ public class AuthServerClientDefault implements AuthServerClient {
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
+        log.info("============GRPC: call to auth service");
         var result = new CompletableFuture<RegisterResponse>();
         stub.register(request, new StreamObserver<RegisterResponse>() {
             @Override
@@ -31,6 +34,7 @@ public class AuthServerClientDefault implements AuthServerClient {
             @Override
             public void onCompleted() {}
         });
+        log.info("============GRPC: done result");
         return result.join();
     }
 }

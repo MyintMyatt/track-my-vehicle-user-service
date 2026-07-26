@@ -6,11 +6,12 @@ import dev.orion.core.domain.transaction.constant.TransactionState;
 import dev.orion.employee_domain.repository.EmployeeAccountRepo;
 import dev.orion.employee_main_server.client.AuthServerClient;
 import dev.orion.employee_main_server.onboarding.request.RegistrationRequest;
+import dev.orion.employee_main_server.onboarding.response.RegistrationResponse;
 import dev.orion.employee_main_server.service.EmployeeAccountService;
 import dev.orion.grpc.employee.RegisterRequest;
-import dev.orion.grpc.employee.RegisterResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,19 +25,21 @@ public class RegistrationService {
     private final EmployeeAccountRepo accountRepo;
     private final EmployeeAccountService accountService;
     private final AuthServerClient authClient;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Transactional
     public boolean  register(RegistrationRequest form) {
         // Check email with company domain name that is company mail or not
         if(!checkEmailDomainName(form.email())){
-            throw new RuntimeException("Your email is not company mail.");
+            throw new BusinessException("Your email is not company mail.");
         }
+
+        PhoneValidator.validate(form.phone());
 
         if(accountService.checkAccountExisted(form.username())){
             throw new BusinessException("Username already taken.");
         }
 
-        PhoneValidator.validate(form.phone());
         var account = form.entity();
         accountRepo.save(account);
         return true;
@@ -48,7 +51,8 @@ public class RegistrationService {
         return emailDomainName.equals(domain);
     }
 
-    public RegisterResponse setNewPassword(String username, String password) {
+    @Transactional
+    public RegistrationResponse setNewPassword(String username, String password) {
         var account = accountService.findByUsername(username);
         var response = authClient.register(
           RegisterRequest.newBuilder()
@@ -56,14 +60,16 @@ public class RegistrationService {
                   .setEmail(account.getEmail())
                   .setPhone(account.getPhone())
                   .setPassword(password)
+                  .setFullName(account.getFullName())
                   .build()
         );
 
         if(response.getSuccess()){
             account.setTransactionState(TransactionState.SUCCESS);
+            // TODO: send register successful push notification to client
         }else {
             account.setTransactionState(TransactionState.FAIL);
         }
-        return response;
+        return new RegistrationResponse(username, response.getMessage());
     }
 }

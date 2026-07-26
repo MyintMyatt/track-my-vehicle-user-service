@@ -16,7 +16,7 @@ public record RegistrationRequest(
         String email,
         @NotBlank(message = "phone required")
         String phone,
-        @NotBlank(message = "dob required")
+        @NotNull(message = "dob required")
         LocalDate dob,
         @NotNull(message = "unique username required")
         Gender gender,

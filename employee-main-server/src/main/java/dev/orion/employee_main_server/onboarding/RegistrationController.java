@@ -2,6 +2,7 @@ package dev.orion.employee_main_server.onboarding;
 
 import dev.orion.commons.model.ApiResponse;
 import dev.orion.employee_main_server.onboarding.request.RegistrationRequest;
+import dev.orion.employee_main_server.onboarding.response.RegistrationResponse;
 import dev.orion.employee_main_server.onboarding.service.RegistrationService;
 import dev.orion.grpc.employee.RegisterResponse;
 import jakarta.validation.Valid;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RegistrationController {
 
-    private RegistrationService service;
+    private final RegistrationService service;
 
     @PostMapping("/register")
     public ApiResponse<Boolean> register(@Valid @RequestBody RegistrationRequest form, BindingResult result){
@@ -22,7 +23,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/set-password")
-    public ApiResponse<RegisterResponse> setPassword(
+    public ApiResponse<RegistrationResponse> setPassword(
             @RequestParam(name = "username") String username,
             @RequestParam(name = "password") String password
             ){
