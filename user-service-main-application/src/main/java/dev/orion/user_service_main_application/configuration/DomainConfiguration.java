@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         repositoryBaseClass = AbstractRepositoryImpl.class
 )
 @EntityScan(
-        basePackages = "dev.orion.employee_domain.entity"
+        basePackages = "dev.orion.user_domain.entity"
 )
 public class DomainConfiguration {
 }

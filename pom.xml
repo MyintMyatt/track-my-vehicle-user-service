@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.orion</groupId>
-	<artifactId>track-my-vehicle-employee-service</artifactId>
+	<artifactId>track-my-vehicle-user-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -18,6 +18,7 @@
 		<common.version>1.0-SNAPSHOT</common.version>
 		<ez-sender.client.version>1.0-SNAPSHOT</ez-sender.client.version>
 		<core.domain.version>1.0-SNAPSHOT</core.domain.version>
+		<auth.client.version>0.0.1-SNAPSHOT</auth.client.version>
 		<employee.core.domain.version>0.0.1-SNAPSHOT</employee.core.domain.version>
 	</properties>
 
@@ -50,6 +51,12 @@
 				<groupId>dev.orion</groupId>
 				<artifactId>ez-sender-client</artifactId>
 				<version>${ez-sender.client.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>dev.orion</groupId>
+				<artifactId>track-my-vehicle-auth-client</artifactId>
+				<version>${auth.client.version}</version>
 			</dependency>
 
 			<dependency>

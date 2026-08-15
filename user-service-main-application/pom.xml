@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>dev.orion</groupId>
-        <artifactId>track-my-vehicle-employee-service</artifactId>
+        <artifactId>track-my-vehicle-user-service</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -78,6 +78,11 @@
         <dependency>
             <groupId>dev.orion</groupId>
             <artifactId>ez-sender-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.orion</groupId>
+            <artifactId>track-my-vehicle-auth-client</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,17 +1,17 @@
 package dev.orion.user_service_main_application.onboarding.service;
 
-import com.ezsender.client.NotificationClient;
+import com.ezsender.client.grpc.EzSenderGrpcClient;
 import dev.orion.commons.exception.BusinessException;
 import dev.orion.commons.utils.PhoneValidator;
 import dev.orion.core.domain.transaction.constant.TransactionState;
+import dev.orion.grpc.employee.RegisterRequest;
+import dev.orion.grpc.notification.NotificationProfileRegisterRequest;
 import dev.orion.user_domain.repository.EmployeeAccountRepo;
 import dev.orion.user_service_main_application.client.AuthServerClient;
 import dev.orion.user_service_main_application.onboarding.request.RegistrationRequest;
 import dev.orion.user_service_main_application.onboarding.request.SetPasswordRequest;
 import dev.orion.user_service_main_application.onboarding.response.RegistrationResponse;
 import dev.orion.user_service_main_application.service.EmployeeAccountService;
-import dev.orion.grpc.employee.RegisterRequest;
-import dev.orion.grpc.notification.NotificationProfileRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -32,7 +32,7 @@ public class RegistrationService {
     private final EmployeeAccountService accountService;
     private final AuthServerClient authClient;
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final NotificationClient notificationClient;
+    private final EzSenderGrpcClient ezSenderGrpcClient;
 
     @Transactional
     public boolean  register(RegistrationRequest form) {
@@ -50,12 +50,12 @@ public class RegistrationService {
 //        accountRepo.save(account);
 
         // register notification profile
-        notificationClient.registerNotificationProfile(
+        ezSenderGrpcClient.registerNotificationProfile(
                 NotificationProfileRegisterRequest.newBuilder()
                         .setUsername(account.getUsername())
                         .setEmail(account.getEmail())
                         .setPhone(account.getPhone())
-                        .addDeviceInfo(form.deviceInfo().toGrpcRequest())
+                        .setDeviceInfo(form.toGrpcDeviceInfo())
                         .setTenantId(serviceName)
                         .build()
         );

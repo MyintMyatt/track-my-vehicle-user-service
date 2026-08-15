@@ -38,4 +38,14 @@ public record RegistrationRequest(
                 account.setEmployeeId(employeeId);
                 return account;
         }
+
+        public dev.orion.grpc.notification.DeviceInfo toGrpcDeviceInfo() {
+                return dev.orion.grpc.notification.DeviceInfo.newBuilder()
+                        .setDeviceId(deviceInfo.getDeviceId())
+                        .setFcmToken(deviceInfo().getFcmToken())
+                        .setDeviceOs(deviceInfo().getDeviceOs())
+                        .setOsVersion(deviceInfo.getDeviceOs())
+                        .setAppVersion(deviceInfo.getAppVersion())
+                        .build();
+        }
 }
