@@ -1,4 +1,4 @@
-package dev.orion.user_service_main_application.onboarding.request;
+package dev.orion.user_service_main_application.employee.onboarding.request;
 
 import jakarta.validation.constraints.NotBlank;
 

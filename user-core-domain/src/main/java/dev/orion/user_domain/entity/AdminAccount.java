@@ -10,16 +10,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(
-        name = "employee_account",
+        name = "admin_account",
         uniqueConstraints = {
-        @UniqueConstraint(name = "uk_employee_username", columnNames = "username"),
-        @UniqueConstraint(name = "uk_employee_employee_id", columnNames = "employee_id"),
-        @UniqueConstraint(name = "uk_employee_phone", columnNames = "phone"),
-        @UniqueConstraint(name = "uk_employee_email", columnNames = "email")
-})
+                @UniqueConstraint(name = "uk_admin_username", columnNames = "username"),
+                @UniqueConstraint(name = "uk_admin_employee_id", columnNames = "employee_id"),
+                @UniqueConstraint(name = "uk_admin_phone", columnNames = "phone"),
+                @UniqueConstraint(name = "uk_admin_email", columnNames = "email")
+        })
 @Data
-public class EmployeeAccount extends Account {
-
+public class AdminAccount extends Account {
     /**
      * Employee ID from company's HR/Employee Management System.
      */

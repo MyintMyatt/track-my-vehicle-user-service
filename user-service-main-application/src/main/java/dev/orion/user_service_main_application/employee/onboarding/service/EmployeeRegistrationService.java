@@ -1,16 +1,17 @@
-package dev.orion.user_service_main_application.onboarding.service;
+package dev.orion.user_service_main_application.employee.onboarding.service;
 
 import com.ezsender.client.grpc.EzSenderGrpcClient;
 import dev.orion.commons.exception.BusinessException;
 import dev.orion.commons.utils.PhoneValidator;
 import dev.orion.core.domain.transaction.constant.TransactionState;
 import dev.orion.grpc.employee.RegisterRequest;
-import dev.orion.grpc.notification.NotificationProfileRegisterRequest;
+import dev.orion.user_domain.entity.AccountNotificationPreferences;
+import dev.orion.user_domain.repository.AccountNotificationPreferencesRepo;
 import dev.orion.user_domain.repository.EmployeeAccountRepo;
 import dev.orion.user_service_main_application.client.AuthServerClient;
-import dev.orion.user_service_main_application.onboarding.request.RegistrationRequest;
-import dev.orion.user_service_main_application.onboarding.request.SetPasswordRequest;
-import dev.orion.user_service_main_application.onboarding.response.RegistrationResponse;
+import dev.orion.user_service_main_application.employee.onboarding.request.EmployeeRegistrationRequest;
+import dev.orion.user_service_main_application.employee.onboarding.request.SetPasswordRequest;
+import dev.orion.user_service_main_application.employee.onboarding.response.RegistrationResponse;
 import dev.orion.user_service_main_application.service.EmployeeAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class RegistrationService {
+public class EmployeeRegistrationService {
 
     @Value("${app.email.domain.name}")
     private String emailDomainName;
@@ -29,36 +30,43 @@ public class RegistrationService {
     private String serviceName;
 
     private final EmployeeAccountRepo accountRepo;
+    private final AccountNotificationPreferencesRepo notiPreferenceRepo;
     private final EmployeeAccountService accountService;
     private final AuthServerClient authClient;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final EzSenderGrpcClient ezSenderGrpcClient;
 
     @Transactional
-    public boolean  register(RegistrationRequest form) {
+    public boolean  register(EmployeeRegistrationRequest form) {
         // Check email with company domain name that is company mail or not
         if(!checkEmailDomainName(form.email())){
             throw new BusinessException("Your email is not company mail.");
         }
-
-        PhoneValidator.validate(form.phone());
+        for(String phone : form.phone()){
+            PhoneValidator.validate(phone);
+        }
         if(accountService.checkAccountExisted(form.username())){
             throw new BusinessException("Username already taken.");
         }
 
         var account = form.entity();
-//        accountRepo.save(account);
+        account = accountRepo.save(account);
+        var notificationPreference = new AccountNotificationPreferences();
+        notificationPreference = notiPreferenceRepo.save(notificationPreference.defaultEntity(account));
+
+        // TODO: notification profile registration with high priority ( kafka -> noti service )
+
 
         // register notification profile
-        ezSenderGrpcClient.registerNotificationProfile(
-                NotificationProfileRegisterRequest.newBuilder()
-                        .setUsername(account.getUsername())
-                        .setEmail(account.getEmail())
-                        .setPhone(account.getPhone())
-                        .setDeviceInfo(form.toGrpcDeviceInfo())
-                        .setTenantId(serviceName)
-                        .build()
-        );
+//        ezSenderGrpcClient.registerNotificationProfile(
+//                NotificationProfileRegisterRequest.newBuilder()
+//                        .setUsername(account.getUsername())
+//                        .setEmail(account.getEmail())
+//                        .setPhone(account.getPhone())
+//                        .setDeviceInfo(form.toGrpcDeviceInfo())
+//                        .setTenantId(serviceName)
+//                        .build()
+//        );
         return true;
     }
 
@@ -73,9 +81,9 @@ public class RegistrationService {
         var account = accountService.findByUsername(request.username());
         var response = authClient.register(
           RegisterRequest.newBuilder()
-                  .setUsername(account.getUsername())
+                  .setUsername(account.getUserName().toString())
                   .setEmail(account.getEmail())
-                  .setPhone(account.getPhone())
+                  .addAllPhone(account.getPhone())
                   .setPassword(request.password())
                   .setFullName(account.getFullName())
                   .build()
