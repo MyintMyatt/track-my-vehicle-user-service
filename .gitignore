@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-employee-main-server/src/main/resources/application-prod.properties
+user-service-main-application/src/main/resources/application-prod.properties
