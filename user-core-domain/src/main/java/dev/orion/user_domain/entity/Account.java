@@ -18,7 +18,7 @@ import java.util.UUID;
 @Table(
         name = "account",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_account_username", columnNames = "username"),
+                @UniqueConstraint(name = "uk_account_username", columnNames = { "system_type", "unique_name"}),
         })
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)

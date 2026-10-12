@@ -14,13 +14,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserName {
-    @Column(nullable = false)
+   
+    @Enumerated(EnumType.STRING)
+    @Column(name = "system_type", nullable = false)
     private SystemType systemType;
-    @Column(unique = true, nullable = false)
+   
+    @Column(name = "unique_name", nullable = false)
     private String uniqueName; // unique user name
 
     public String toString(){
-        return systemType.name() + "-@" + uniqueName.toLowerCase();
+        return systemType.name() + "@" + uniqueName.toLowerCase();
     }
 
     public String username() {

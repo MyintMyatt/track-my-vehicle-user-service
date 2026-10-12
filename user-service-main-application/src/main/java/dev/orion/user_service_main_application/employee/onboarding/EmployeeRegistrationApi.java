@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/public/v1/employee")
 @RequiredArgsConstructor
-public class EmployeeRegistrationController {
+public class EmployeeRegistrationApi {
 
     private final EmployeeRegistrationService service;
 

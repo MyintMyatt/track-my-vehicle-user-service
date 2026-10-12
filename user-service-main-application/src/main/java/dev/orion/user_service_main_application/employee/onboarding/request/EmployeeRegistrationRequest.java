@@ -1,5 +1,6 @@
 package dev.orion.user_service_main_application.employee.onboarding.request;
 
+import dev.orion.core.domain.common.constant.SystemType;
 import dev.orion.commons.constant.Gender;
 import dev.orion.commons.model.DeviceInfo;
 import dev.orion.user_domain.embedded.UserName;
@@ -33,7 +34,9 @@ public record EmployeeRegistrationRequest(
 ) {
         public EmployeeAccount entity(){
                 var userName = new UserName();
-                userName.toUserName(username);
+                userName.setSystemType(SystemType.EMPLOYEE);
+                userName.setUniqueName(username);
+                
                 var account = new EmployeeAccount();
                 account.setFullName(fullName);
                 account.setUserName(userName);
