@@ -4,7 +4,6 @@ import dev.orion.core.domain.common.constant.SystemType;
 import dev.orion.commons.constant.Gender;
 import dev.orion.commons.model.DeviceInfo;
 import dev.orion.user_domain.embedded.UserName;
-import dev.orion.user_domain.entity.AccountNotificationPreferences;
 import dev.orion.user_domain.entity.EmployeeAccount;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -27,6 +26,8 @@ public record EmployeeRegistrationRequest(
         LocalDate dob,
         @NotNull(message = "unique username required")
         Gender gender,
+        @NotBlank(message = "password required")
+        String password,
         @NotBlank(message = "employee id required")
         String employeeId, // this id is assigned from company employee management system, not from this system.
         @Valid @NotNull(message = "device info required")

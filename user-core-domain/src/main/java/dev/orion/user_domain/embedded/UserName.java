@@ -3,6 +3,8 @@ package dev.orion.user_domain.embedded;
 import dev.orion.core.domain.common.constant.SystemType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

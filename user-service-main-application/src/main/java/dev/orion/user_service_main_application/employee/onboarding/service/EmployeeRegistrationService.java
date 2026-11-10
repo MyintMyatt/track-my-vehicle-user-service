@@ -5,6 +5,7 @@ import dev.orion.commons.exception.BusinessException;
 import dev.orion.commons.utils.PhoneValidator;
 import dev.orion.core.domain.transaction.constant.TransactionState;
 import dev.orion.grpc.employee.RegisterRequest;
+import dev.orion.noti.UserNotiProfile;
 import dev.orion.user_domain.entity.AccountNotificationPreferences;
 import dev.orion.user_domain.repository.AccountNotificationPreferencesRepo;
 import dev.orion.user_domain.repository.EmployeeAccountRepo;
@@ -55,7 +56,11 @@ public class EmployeeRegistrationService {
         notificationPreference = notiPreferenceRepo.save(notificationPreference.defaultEntity(account));
 
         // TODO: notification profile registration with high priority ( kafka -> noti service )
-
+        var userNotiProfileEvent = UserNotiProfile.newBuilder()
+          .setUsername(account.getUserName().toString())
+          .setEmail(account.getEmail())
+          .setPhone(account.getPhone())
+          .build();
 
         // register notification profile
 //        ezSenderGrpcClient.registerNotificationProfile(

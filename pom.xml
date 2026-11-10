@@ -20,6 +20,7 @@
 		<core.domain.version>1.0-SNAPSHOT</core.domain.version>
 		<auth.client.version>0.0.1-SNAPSHOT</auth.client.version>
 		<employee.core.domain.version>0.0.1-SNAPSHOT</employee.core.domain.version>
+    <app.schema.version>1.0-SNAPSHOT</app.schema.version>
 	</properties>
 
 	<modules>
@@ -52,6 +53,12 @@
 				<artifactId>ez-sender-client</artifactId>
 				<version>${ez-sender.client.version}</version>
 			</dependency>
+
+      <dependency>
+        <groupId>dev.orion</groupId>
+        <artifactId>track-my-vehicle-schemas</artifactId>
+        <version>${app.schema.version}</version>
+      </dependency>
 
 			<dependency>
 				<groupId>dev.orion</groupId>

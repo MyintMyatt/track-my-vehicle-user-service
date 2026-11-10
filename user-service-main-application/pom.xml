@@ -84,6 +84,11 @@
             <groupId>dev.orion</groupId>
             <artifactId>track-my-vehicle-auth-client</artifactId>
         </dependency>
+
+        <dependency>
+          <groupId>dev.orion</groupId>
+          <artifactId>track-my-vehicle-schemas</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
